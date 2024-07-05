@@ -1,4 +1,5 @@
 'use client'
+import { list } from 'postcss'
 import React, { useEffect, useRef, useState } from 'react'
 
 export const Selections = () => {
@@ -18,39 +19,41 @@ const [raceArray, setRaceArray] = useState([
     {_id:10,class:'Gold'},
     {_id:11,class:'Hill'},
     {_id:12,class:'Dragon Master'},
-    {_id:13,class:'Mounted'}])
+    {_id:13,class:'Mounted'},
+    {_id:14,class:'Decay'}])
 const [choosedSelection, setChoosedSelection] = useState([])
-let listArray = []
+const [listArray, setListArray] = useState([])
 
+console.log(listArray)
 useEffect(() => {
     setRaceArray(shuffle(raceArray))
     setClassArray(shuffle(classArray))
     combineArrays()
     function shuffle(array){
-        let shuffledArray = []
-        let usedIndexes = []
-
-        let i = 0
-        while (i < array.length){
-            let randomNumber = Math.floor(Math.random() * array.length)
-            if(!usedIndexes.includes(randomNumber)){
-                shuffledArray.push(array[randomNumber])
-                usedIndexes.push(randomNumber)
-                i++
-            }
+        for (let i = 0; i < array.length; i++) {
+            let j = Math.floor(Math.random() * (i + 1))
+            let temp = array[i]
+            array[i] = array[j]
+            array[j] = temp
         }
-        return shuffledArray
     }
 
     function combineArrays(){
+        
         for (let i = 0; i < raceArray.length; i++) {
             listArray.push([raceArray[i],classArray[i]])
             
         }
-        console.log(listArray)
+        
+
     }
 
 }, [])
+
+useEffect(() => {
+
+}, [])
+
 
 function handleRemoveRaceClick(id){    
 const findSelection = raceArray.find((items) => items.id === id)    
@@ -68,25 +71,23 @@ console.log(choosedSelection)
             <div className=''>
                 
                     {
-                        listArray && listArray.map((items)=>
+                        listArray && listArray.map((array) =>(array.map((item)=>(
+                    <div key={item.id || item._id} className='flex flex-col'>
+                            <p key={item.id}>{item.image}</p>
+                            <p key={item._id}>{item.class}</p>
+                    </div>
+                        ))))
                             
-                            <div className='flex'>
-                                    <span key={items._id}>{items.class}</span>
-                                    <span key={items.id}>{items.image}</span>
-                                <div>
-                                </div>
-                                <div className=''>
-                                </div>
-                            </div>
+
                         
-                        )
+                        
                     }
                
 
                 {/* <div className='flex flex-col gap-2'>
                     {
                         classArray && classArray.slice(classArray.length-5,classArray.length).map((items)=>{
-                        return <span key={items.id} className='border p-5 cursor-pointer'>{items.image}</span>
+                        return <p key={item.id}>{item.image}</p> cursor-pointer'>{items.image}</span>
                         })
                     }
                 </div>
@@ -97,7 +98,7 @@ console.log(choosedSelection)
                         className='border p-5 cursor-pointer'>{items.image}</span>
                         })
                     }
-                </div> */}
+                </div>  */}
             </div>
         <div>
            {
